@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Thirty</string>
+    <string name="rollNrText">Roll nr: 0</string>
+
+    <string name="dice1Description">dice1</string>
+    <string name="dice2Description">dice2</string>
+    <string name="dice3Description">dice3</string>
+    <string name="dice4Description">dice4</string>
+    <string name="dice5Description">dice5</string>
+    <string name="dice6Description">dice6</string>
+
+    <string name="btnRollText">Rulla!</string>
+    <string name="totalScoreText">Total score: 0</string>
+    <string name="currentScoreText">Current score: 0</string>
+
+    <string name="item_label">Poängsättning</string>
+    <string name="auto_complete_label">Välj poängsättning</string>
+
+    <string name="nextButton">Nästa</string>
+
+    <string name="totalScoreTitle">Totalpoäng</string>
+    <string name="roundScoreTitle">Delpoäng</string>
+
 </resources>
