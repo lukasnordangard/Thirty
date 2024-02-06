@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity() {
             diceManager.rollAllDice()
         }
 
+        setDiceListener()
+
         // Select scoring category.
         val autoComplete: AutoCompleteTextView = findViewById(R.id.auto_complete)
         val adapter = ArrayAdapter(this, R.layout.list_item, dropDownItems)
@@ -62,5 +64,27 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.ibDice4), findViewById(R.id.ibDice5), findViewById(R.id.ibDice6)
         )
     }
+
+    private fun setDiceListener(){
+        for (diceButton in diceButtons) {
+            val diceIndex = diceButtons.indexOf(diceButton)
+            if (diceManager.getNumberOfRolls() < 2){
+                diceButton.setOnClickListener { toggleDiceSelected(diceManager.getDiceList().elementAt(diceIndex)) }
+            } else {
+                diceButton.setOnClickListener { toggleDiceToAdd(diceManager.getDiceList().elementAt(diceIndex)) }
+            }
+        }
+    }
+
+    private fun toggleDiceSelected(dice: Dice) {
+        dice.setSelectedStatus(!dice.getSelectedStatus())
+        diceManager.updateDiceImg(dice)
+    }
+
+    private fun toggleDiceToAdd(dice: Dice) {
+        dice.setSelectedScoreTerm(!dice.getSelectedScoreTerm())
+        diceManager.updateDiceImg(dice)
+    }
+
 
 }

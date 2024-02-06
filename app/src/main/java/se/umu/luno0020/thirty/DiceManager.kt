@@ -15,6 +15,14 @@ class DiceManager(private val context: Context, private val diceButtons:List<Ima
         initializeDice()
     }
 
+    fun getNumberOfRolls(): Int{
+        return numberOfRolls
+    }
+
+    fun getDiceList(): List<Dice>{
+        return diceList
+    }
+
     private fun initializeDice() {
         for (diceButton in diceButtons) {
             val dice = Dice(diceButton)
@@ -47,7 +55,7 @@ class DiceManager(private val context: Context, private val diceButtons:List<Ima
         }
     }
 
-    private fun updateDiceImg(dice: Dice) {
+    fun updateDiceImg(dice: Dice) {
         val diceColor = when {
             dice.getSelectedScoreTerm() -> "red"
             dice.getSelectedStatus() -> "grey"
