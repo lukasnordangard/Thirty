@@ -1,12 +1,15 @@
 package se.umu.luno0020.thirty
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.textfield.TextInputLayout
 import java.util.Stack
 
-class ScoreManager(private val context: Context, private val diceManager:DiceManager) {
+class ScoreManager( private val context: Context, private val diceManager:DiceManager,
+                    private val totalScoreText: TextView, private val currentScoreText: TextView) {
     private var totalScoreList = ArrayList<Int>()
     private var currentScore = 0
 
@@ -37,10 +40,11 @@ class ScoreManager(private val context: Context, private val diceManager:DiceMan
                 (itemSelected.toIntOrNull() == addResult)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateScoreView(currentScore: Int, totalScore: Int) {
         // Update the score view, possibly by communicating back to the MainActivity
-        println("currentScore: $currentScore")
-        println("totalScore: $totalScore")
+        totalScoreText.text = "Total score: $totalScore"
+        currentScoreText.text = "Current score: $currentScore"
     }
 
     private fun restoreTotalScore(diceStack: Stack<Dice>, scoreList: ArrayList<Int>): ArrayList<Int> {

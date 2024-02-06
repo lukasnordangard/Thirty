@@ -29,10 +29,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val textInputLayout: TextInputLayout = findViewById(R.id.textInputLayout)
+        val totalScoreText: TextView = findViewById(R.id.tvTotalScore)
+        val currentScoreText: TextView = findViewById(R.id.tvCurrentScore)
+
 
         diceButtons = addDiceButtons()
         diceManager = DiceManager(this, diceButtons)
-        scoreManager = ScoreManager(this, diceManager)
+        scoreManager = ScoreManager(this, diceManager, totalScoreText, currentScoreText)
 
         // Roll dice.
         val rollButton: Button = findViewById(R.id.btnRoll)
@@ -140,7 +143,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun setNewRoundVisibility(){
-        val currentScoreText: TextView = findViewById(R.id.tvCurrentScoreText)
+        val currentScoreText: TextView = findViewById(R.id.tvCurrentScore)
         val addDice: Button = findViewById(R.id.btnAdd)
         val btnNextRound: Button = findViewById(R.id.btnNext)
         currentScoreText.text = "Current score: 0"
