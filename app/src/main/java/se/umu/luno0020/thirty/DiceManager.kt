@@ -2,8 +2,10 @@ package se.umu.luno0020.thirty
 
 import android.content.Context
 import android.view.View
+import android.widget.AutoCompleteTextView
 import android.widget.ImageButton
 import android.widget.Toast
+import com.google.android.material.textfield.TextInputLayout
 import java.util.Locale
 import java.util.Stack
 
@@ -37,10 +39,14 @@ class DiceManager(private val context: Context, private val diceButtons:List<Ima
         }
     }
 
-    fun rollAllDice(){
+    fun rollAllDice(textInputLayout: TextInputLayout){
         if (numberOfRolls < 3) {
             updateDice()
             numberOfRolls++
+
+            if (numberOfRolls > 2) {
+                textInputLayout.visibility = View.VISIBLE
+            }
         } else {
             Toast.makeText(context, "Max number of rolls!", Toast.LENGTH_SHORT).show()
         }

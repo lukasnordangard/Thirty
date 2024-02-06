@@ -11,10 +11,11 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import com.google.android.material.textfield.TextInputLayout
 
 class MainActivity : AppCompatActivity() {
 
-    private val dropDownItems = mutableListOf("LOW", "4",)// "5", "6", "7", "8", "9", "10", "11", "12")
+    private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
     private var itemSelected = ""
 
     private lateinit var diceManager:DiceManager
@@ -27,6 +28,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val textInputLayout: TextInputLayout = findViewById(R.id.textInputLayout)
+
         diceButtons = addDiceButtons()
         diceManager = DiceManager(this, diceButtons)
         scoreManager = ScoreManager(this, diceManager)
@@ -34,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         // Roll dice.
         val rollButton: Button = findViewById(R.id.btnRoll)
         rollButton.setOnClickListener {
-            diceManager.rollAllDice()
+            diceManager.rollAllDice(textInputLayout)
         }
 
         // Listening for dices (to save during next roll).
@@ -59,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         // Add dice.
         val addDice: Button = findViewById(R.id.btnAdd)
         addDice.setOnClickListener {
-            scoreManager.addDice(itemSelected)
+            scoreManager.addDice(itemSelected, textInputLayout)
         }
 
         // Next roll round.

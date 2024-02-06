@@ -3,13 +3,14 @@ package se.umu.luno0020.thirty
 import android.content.Context
 import android.view.View
 import android.widget.Toast
+import com.google.android.material.textfield.TextInputLayout
 import java.util.Stack
 
 class ScoreManager(private val context: Context, private val diceManager:DiceManager) {
     private var totalScoreList = ArrayList<Int>()
     private var currentScore = 0
 
-    fun addDice(itemSelected: String) {
+    fun addDice(itemSelected: String, textInputLayout: TextInputLayout) {
         val diceValuesToAdd = mutableListOf<Int>()
         val diceStack = Stack<Dice>()
 
@@ -20,9 +21,11 @@ class ScoreManager(private val context: Context, private val diceManager:DiceMan
 
         if (checkAdditionRules(itemSelected, addResult)) {
             updateScoreView(currentScore, totalScoreList.sum())
+            textInputLayout.visibility = View.INVISIBLE
         } else {
             totalScoreList = restoreTotalScore(diceStack, totalScoreList)
             currentScore -= addResult
+            textInputLayout.visibility = View.INVISIBLE
             Toast.makeText(context, "Sum != $itemSelected", Toast.LENGTH_SHORT).show()
         }
         diceValuesToAdd.clear()
