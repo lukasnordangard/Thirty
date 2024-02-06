@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="se.umu.luno0020.thirtythrows.ResultActivity">
+    tools:context="se.umu.luno0020.thirty.ResultActivity">
 
     <TextView
         android:id="@+id/textView8"

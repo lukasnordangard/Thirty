@@ -3,8 +3,6 @@ package se.umu.luno0020.thirty
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 

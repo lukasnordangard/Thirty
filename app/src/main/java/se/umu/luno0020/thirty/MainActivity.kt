@@ -15,7 +15,7 @@ import com.google.android.material.textfield.TextInputLayout
 
 class MainActivity : AppCompatActivity() {
 
-    private val dropDownItems = mutableListOf("LOW", "4", "5")//, "6", "7", "8", "9", "10", "11", "12")
+    private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
     private var itemSelected = ""
 
     private lateinit var diceManager:DiceManager
