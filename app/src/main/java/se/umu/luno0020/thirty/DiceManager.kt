@@ -2,7 +2,6 @@ package se.umu.luno0020.thirty
 
 import android.content.Context
 import android.view.View
-import android.widget.AutoCompleteTextView
 import android.widget.ImageButton
 import android.widget.Toast
 import com.google.android.material.textfield.TextInputLayout
@@ -22,8 +21,8 @@ class DiceManager(private val context: Context, private val diceButtons:List<Ima
         return numberOfRolls
     }
 
-    fun setNumberOfRolls(rollnr: Int){
-        numberOfRolls = rollnr
+    fun setNumberOfRolls(rollNr: Int){
+        numberOfRolls = rollNr
     }
 
     fun getDiceList(): List<Dice>{

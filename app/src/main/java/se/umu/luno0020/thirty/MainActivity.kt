@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateDropDownMenu() {
         dropDownItems.remove(itemSelected)
-        val dropDownAlternatives = "Alternativ: " + dropDownItems.toString()
+        val dropDownAlternatives = "Alternativ: $dropDownItems"
         val currentDropDownItemsText: TextView = findViewById(R.id.tvCurrentDropDownItems)
         currentDropDownItemsText.text = dropDownAlternatives
     }
