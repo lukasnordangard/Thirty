@@ -14,6 +14,7 @@
     <string name="btnAddText">Addera</string>
     <string name="btnNext">Nästa</string>
 
+    <string name="CurrentDropDownItems">Alternativ: </string>
     <string name="item_label">Poängsättning</string>
     <string name="auto_complete_label">Välj poängsättning</string>
 

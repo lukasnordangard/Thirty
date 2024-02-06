@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 dropDownItems.find { it == itemSelected }?.run {
                     setDiceListener()
                     makeButtonsVisible()
-                    scoreManager.setCurrentScore(0)
+                    scoreManager.resetCurrentScore()
                 }
             }
 
@@ -153,11 +153,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateDropDownMenu() {
         dropDownItems.remove(itemSelected)
-        /*
         val dropDownAlternatives = "Alternativ: " + dropDownItems.toString()
         val currentDropDownItemsText: TextView = findViewById(R.id.tvCurrentDropDownItems)
         currentDropDownItemsText.text = dropDownAlternatives
-         */
     }
 
     private fun resetRollNumberAndListeners() {
