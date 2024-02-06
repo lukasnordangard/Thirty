@@ -2,11 +2,14 @@ package se.umu.luno0020.thirty
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.Toast
+import java.util.Stack
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private var currentScore = 0
 
     private lateinit var diceManager:DiceManager
+    private lateinit var scoreManager: ScoreManager
     private var diceButtons = listOf<ImageButton>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,11 +28,13 @@ class MainActivity : AppCompatActivity() {
         diceButtons = addDiceButtons()
         diceManager = DiceManager(this, diceButtons)
 
+        // Roll dice.
         val rollButton: Button = findViewById(R.id.btnRoll)
         rollButton.setOnClickListener {
             diceManager.rollAllDice()
         }
 
+        // Listening for dices (to save during next roll).
         setDiceListener()
 
         // Select scoring category.
@@ -41,9 +47,21 @@ class MainActivity : AppCompatActivity() {
 
                 // Find score category that matches chosen one in drop down menu.
                 dropDownItems.find { it == itemSelected }?.run {
+                    setDiceListener()
+                    makeButtonsVisible()
                     currentScore = 0
                 }
             }
+
+        // Add dice.
+        scoreManager = ScoreManager(this, diceManager)
+
+        val addDice: Button = findViewById(R.id.btnAdd)
+        addDice.setOnClickListener {
+            println("Hejhej")
+            scoreManager.addDice(itemSelected)
+        }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -69,22 +87,23 @@ class MainActivity : AppCompatActivity() {
         for (diceButton in diceButtons) {
             val diceIndex = diceButtons.indexOf(diceButton)
             if (diceManager.getNumberOfRolls() < 2){
-                diceButton.setOnClickListener { toggleDiceSelected(diceManager.getDiceList().elementAt(diceIndex)) }
+                diceButton.setOnClickListener {
+                    diceManager.toggleDiceSelected(diceManager.getDiceList().elementAt(diceIndex))
+                }
             } else {
-                diceButton.setOnClickListener { toggleDiceToAdd(diceManager.getDiceList().elementAt(diceIndex)) }
+                diceButton.setOnClickListener {
+                    diceManager.toggleDiceToAdd(diceManager.getDiceList().elementAt(diceIndex))
+                }
             }
         }
     }
 
-    private fun toggleDiceSelected(dice: Dice) {
-        dice.setSelectedStatus(!dice.getSelectedStatus())
-        diceManager.updateDiceImg(dice)
+    private fun makeButtonsVisible(){
+        val addDice: Button = findViewById(R.id.btnAdd)
+        val btnNext: Button = findViewById(R.id.btnNext)
+        addDice.visibility = View.VISIBLE
+        btnNext.visibility = View.VISIBLE
+        diceManager.unselectAllDice()
     }
-
-    private fun toggleDiceToAdd(dice: Dice) {
-        dice.setSelectedScoreTerm(!dice.getSelectedScoreTerm())
-        diceManager.updateDiceImg(dice)
-    }
-
 
 }

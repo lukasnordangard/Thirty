@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import java.util.Locale
+import java.util.Stack
 
 class DiceManager(private val context: Context, private val diceButtons:List<ImageButton>) {
 
@@ -55,7 +56,7 @@ class DiceManager(private val context: Context, private val diceButtons:List<Ima
         }
     }
 
-    fun updateDiceImg(dice: Dice) {
+    private fun updateDiceImg(dice: Dice) {
         val diceColor = when {
             dice.getSelectedScoreTerm() -> "red"
             dice.getSelectedStatus() -> "grey"
@@ -83,5 +84,33 @@ class DiceManager(private val context: Context, private val diceButtons:List<Ima
         return resourceId
     }
 
+    fun toggleDiceSelected(dice: Dice) {
+        dice.setSelectedStatus(!dice.getSelectedStatus())
+        updateDiceImg(dice)
+    }
 
+    fun toggleDiceToAdd(dice: Dice) {
+        dice.setSelectedScoreTerm(!dice.getSelectedScoreTerm())
+        updateDiceImg(dice)
+    }
+
+    fun unselectAllDice(){
+        for (dice in diceList){
+            dice.setSelectedStatus(false)
+            updateDiceImg(dice)
+        }
+    }
+
+    fun findAllDiceForAddition(totalScoreList: ArrayList<Int>, diceValuesToAdd: MutableList<Int>, diceStack: Stack<Dice>
+    ){
+        for (dice in diceList) {
+            if (dice.getSelectedScoreTerm()) {
+                totalScoreList.add(dice.getValue())
+                diceValuesToAdd.add(dice.getValue())
+                diceStack.push(dice)
+                toggleDiceToAdd(dice)
+                dice.diceButton.visibility = View.INVISIBLE
+            }
+        }
+    }
 }
