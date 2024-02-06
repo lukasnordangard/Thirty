@@ -8,14 +8,11 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageButton
-import android.widget.Toast
-import java.util.Stack
 
 class MainActivity : AppCompatActivity() {
 
     private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
     private var itemSelected = ""
-    private var currentScore = 0
 
     private lateinit var diceManager:DiceManager
     private lateinit var scoreManager: ScoreManager
@@ -27,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         diceButtons = addDiceButtons()
         diceManager = DiceManager(this, diceButtons)
+        scoreManager = ScoreManager(this, diceManager)
 
         // Roll dice.
         val rollButton: Button = findViewById(R.id.btnRoll)
@@ -49,16 +47,12 @@ class MainActivity : AppCompatActivity() {
                 dropDownItems.find { it == itemSelected }?.run {
                     setDiceListener()
                     makeButtonsVisible()
-                    currentScore = 0
                 }
             }
 
         // Add dice.
-        scoreManager = ScoreManager(this, diceManager)
-
         val addDice: Button = findViewById(R.id.btnAdd)
         addDice.setOnClickListener {
-            println("Hejhej")
             scoreManager.addDice(itemSelected)
         }
 
@@ -67,13 +61,11 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("itemSelected", itemSelected)
-        outState.putInt("currentScore", currentScore)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         itemSelected = savedInstanceState.getString("itemSelected") ?: ""
-        currentScore = savedInstanceState.getInt("currentScore")
     }
 
     private fun addDiceButtons(): List<ImageButton> {

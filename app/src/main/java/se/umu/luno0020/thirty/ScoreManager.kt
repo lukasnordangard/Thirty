@@ -25,8 +25,9 @@ class ScoreManager(private val context: Context, private val diceManager:DiceMan
             currentScore -= addResult
             Toast.makeText(context, "Sum != $itemSelected", Toast.LENGTH_SHORT).show()
         }
-        diceValuesToAdd.clear()
-        diceStack.clear()
+        diceValuesToAdd.clear() // may be removed
+        diceStack.clear() // may be removed
+        currentScore = 0 // may be not here?
     }
 
     private fun checkAdditionRules(itemSelected: String, addResult: Int): Boolean {
