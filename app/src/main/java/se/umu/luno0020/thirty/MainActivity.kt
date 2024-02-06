@@ -32,13 +32,6 @@ class MainActivity : AppCompatActivity() {
         val totalScoreText: TextView = findViewById(R.id.tvTotalScore)
         val currentScoreText: TextView = findViewById(R.id.tvCurrentScore)
 
-        val button: Button = findViewById(R.id.button)
-        button.setOnClickListener {
-            val intent = Intent(this@MainActivity, ResultActivity::class.java)
-            startActivity(intent)
-        }
-
-
         diceButtons = addDiceButtons()
         diceManager = DiceManager(this, diceButtons)
         scoreManager = ScoreManager(this, diceManager, totalScoreText, currentScoreText)
@@ -171,7 +164,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun goToResultView() {
         val intent = Intent(this, ResultActivity::class.java)
-        //intent.putExtra("gameRounds", gameRounds.toTypedArray())
+        intent.putExtra("gameRounds", gameRounds.toTypedArray())
         startActivity(intent)
     }
 
