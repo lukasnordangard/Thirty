@@ -1,5 +1,7 @@
 package se.umu.luno0020.thirty
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -8,15 +10,18 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
-    private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+    private val dropDownItems = mutableListOf("LOW", "4",)// "5", "6", "7", "8", "9", "10", "11", "12")
     private var itemSelected = ""
 
     private lateinit var diceManager:DiceManager
     private lateinit var scoreManager: ScoreManager
     private var diceButtons = listOf<ImageButton>()
+
+    private var gameRounds = mutableListOf<GameRound>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +52,7 @@ class MainActivity : AppCompatActivity() {
                 dropDownItems.find { it == itemSelected }?.run {
                     setDiceListener()
                     makeButtonsVisible()
+                    scoreManager.setCurrentScore(0)
                 }
             }
 
@@ -54,6 +60,19 @@ class MainActivity : AppCompatActivity() {
         val addDice: Button = findViewById(R.id.btnAdd)
         addDice.setOnClickListener {
             scoreManager.addDice(itemSelected)
+        }
+
+        // Next roll round.
+        val btnNextRound: Button = findViewById(R.id.btnNext)
+        btnNextRound.setOnClickListener{
+            saveCurrentRound()
+
+            // Check if there are score categories left in dropdown menu.
+            if (dropDownItems.size > 1) {
+                prepareNextRound()
+            } else {
+                goToResultView()
+            }
         }
 
     }
@@ -96,6 +115,54 @@ class MainActivity : AppCompatActivity() {
         addDice.visibility = View.VISIBLE
         btnNext.visibility = View.VISIBLE
         diceManager.unselectAllDice()
+    }
+
+    private fun saveCurrentRound() {
+        gameRounds.add(scoreManager.saveCurrentRound(itemSelected))
+    }
+
+    /**
+     * Resets and updates the necessary components for the next game round.
+     */
+    private fun prepareNextRound() {
+        resetDiceAndVisibility()
+        updateDropDownMenu()
+        resetRollNumberAndListeners()
+    }
+
+    private fun resetDiceAndVisibility() {
+        diceManager.resetDice()
+        setNewRoundVisibility()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setNewRoundVisibility(){
+        val currentScoreText: TextView = findViewById(R.id.tvCurrentScoreText)
+        val addDice: Button = findViewById(R.id.btnAdd)
+        val btnNextRound: Button = findViewById(R.id.btnNext)
+        currentScoreText.text = "Current score: 0"
+        addDice.visibility = View.INVISIBLE
+        btnNextRound.visibility = View.INVISIBLE
+    }
+
+    private fun updateDropDownMenu() {
+        dropDownItems.remove(itemSelected)
+        /*
+        val dropDownAlternatives = "Alternativ: " + dropDownItems.toString()
+        val currentDropDownItemsText: TextView = findViewById(R.id.tvCurrentDropDownItems)
+        currentDropDownItemsText.text = dropDownAlternatives
+         */
+    }
+
+    private fun resetRollNumberAndListeners() {
+        diceManager.setNumberOfRolls(0)
+        setDiceListener()
+    }
+
+    private fun goToResultView() {
+        val intent = Intent(this, ResultActivity::class.java)
+        //intent.putExtra("gameRounds", gameRounds.toTypedArray())
+        startActivity(intent)
     }
 
 }

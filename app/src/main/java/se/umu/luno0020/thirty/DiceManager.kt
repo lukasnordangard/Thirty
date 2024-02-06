@@ -20,6 +20,10 @@ class DiceManager(private val context: Context, private val diceButtons:List<Ima
         return numberOfRolls
     }
 
+    fun setNumberOfRolls(rollnr: Int){
+        numberOfRolls = rollnr
+    }
+
     fun getDiceList(): List<Dice>{
         return diceList
     }
@@ -111,6 +115,14 @@ class DiceManager(private val context: Context, private val diceButtons:List<Ima
                 toggleDiceToAdd(dice)
                 dice.diceButton.visibility = View.INVISIBLE
             }
+        }
+    }
+
+    fun resetDice(){
+        for (dice in diceList){
+            dice.diceButton.visibility = View.INVISIBLE
+            dice.setSelectedStatus(false)
+            dice.setSelectedScoreTerm(false)
         }
     }
 }
