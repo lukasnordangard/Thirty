@@ -15,7 +15,7 @@ import com.google.android.material.textfield.TextInputLayout
 
 class MainActivity : AppCompatActivity() {
 
-    private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+    private val dropDownItems = mutableListOf("LOW", "4", "5")//, "6", "7", "8", "9", "10", "11", "12")
     private var itemSelected = ""
 
     private lateinit var diceManager:DiceManager
@@ -31,6 +31,12 @@ class MainActivity : AppCompatActivity() {
         val textInputLayout: TextInputLayout = findViewById(R.id.textInputLayout)
         val totalScoreText: TextView = findViewById(R.id.tvTotalScore)
         val currentScoreText: TextView = findViewById(R.id.tvCurrentScore)
+
+        val button: Button = findViewById(R.id.button)
+        button.setOnClickListener {
+            val intent = Intent(this@MainActivity, ResultActivity::class.java)
+            startActivity(intent)
+        }
 
 
         diceButtons = addDiceButtons()
