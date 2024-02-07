@@ -10,6 +10,7 @@ class Dice(var diceButton: ImageButton) {
     private var value = 1
     private var isSelected = false
     private var selectedScoreTerm = false
+    private var hasBeenAdded = false
 
     fun getValue(): Int {
         return value
@@ -33,6 +34,14 @@ class Dice(var diceButton: ImageButton) {
 
     fun setSelectedScoreTerm(status: Boolean){
         selectedScoreTerm = status
+    }
+
+    fun getHasBeenAddedStatus(): Boolean {
+        return hasBeenAdded
+    }
+
+    fun setHasBeenAddedStatus(status: Boolean){
+        hasBeenAdded = status
     }
 
     fun roll(): Int {

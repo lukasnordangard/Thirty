@@ -1,15 +1,18 @@
 package se.umu.luno0020.thirty
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.textfield.TextInputLayout
 import java.util.Locale
 import java.util.Stack
 
-class DiceManager(private val context: Context, private val diceButtons: List<ImageButton>) {
+class DiceManager(private val context: Context, private val diceButtons: List<ImageButton>,
+                  private val rollNrText: TextView) {
 
     private var numberOfRolls = 0
     private val diceList = mutableListOf<Dice>()
@@ -39,11 +42,12 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
         }
     }
 
+    @SuppressLint("SetTextI18n")
     fun rollAllDice(textInputLayout: TextInputLayout){
         if (numberOfRolls < 3) {
             updateDice()
             numberOfRolls++
-
+            rollNrText.text = "Roll nr: $numberOfRolls"
             if (numberOfRolls > 2) {
                 textInputLayout.visibility = View.VISIBLE
             }
@@ -121,6 +125,7 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
                 diceStack.push(dice)
                 toggleDiceToAdd(dice)
                 dice.diceButton.visibility = View.INVISIBLE
+                dice.setHasBeenAddedStatus(true)
             }
         }
     }
@@ -130,7 +135,17 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
             dice.diceButton.visibility = View.INVISIBLE
             dice.setSelectedStatus(false)
             dice.setSelectedScoreTerm(false)
+            dice.setHasBeenAddedStatus(false)
         }
+    }
+
+    fun hasDicesBeenAdded(): Boolean {
+        for (dice in diceList){
+            if (dice.getHasBeenAddedStatus()) {
+                return true
+            }
+        }
+        return false
     }
 
     fun saveInstanceState(): Bundle {
@@ -141,36 +156,48 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
         val diceValues = mutableListOf<Int>()
         val diceSelectedStatus = mutableListOf<Boolean>()
         val diceSelectedScoreTerm = mutableListOf<Boolean>()
+        val diceHasBeenAddedStatus = mutableListOf<Boolean>()
         for (dice in diceList) {
             diceValues.add(dice.getValue())
             diceSelectedStatus.add(dice.getSelectedStatus())
             diceSelectedScoreTerm.add(dice.getSelectedScoreTerm())
+            diceHasBeenAddedStatus.add(dice.getHasBeenAddedStatus())
         }
         bundle.putIntArray("diceValues", diceValues.toIntArray())
         bundle.putBooleanArray("diceSelectedStatus", diceSelectedStatus.toBooleanArray())
         bundle.putBooleanArray("diceSelectedScoreTerm", diceSelectedScoreTerm.toBooleanArray())
+        bundle.putBooleanArray("diceHasBeenAddedStatus", diceHasBeenAddedStatus.toBooleanArray())
 
         return bundle
     }
 
+    @SuppressLint("SetTextI18n")
     fun restoreInstanceState(savedInstanceState: Bundle) {
         numberOfRolls = savedInstanceState.getInt("numberOfRolls", 0)
-
+        rollNrText.text = "Roll nr: $numberOfRolls"
         // Restore dice data
         val diceValues = savedInstanceState.getIntArray("diceValues") ?: intArrayOf()
         val diceSelectedStatus = savedInstanceState.getBooleanArray("diceSelectedStatus") ?: booleanArrayOf()
         val diceSelectedScoreTerm = savedInstanceState.getBooleanArray("diceSelectedScoreTerm") ?: booleanArrayOf()
-        if (diceValues.size == diceSelectedStatus.size && diceValues.size == diceSelectedScoreTerm.size) {
+        val diceHasBeenAddedStatus = savedInstanceState.getBooleanArray("diceHasBeenAddedStatus") ?: booleanArrayOf()
+        if (diceValues.size == diceHasBeenAddedStatus.size &&
+            diceValues.size == diceSelectedStatus.size &&
+            diceValues.size == diceSelectedScoreTerm.size) {
             for (i in diceValues.indices) {
                 if (i < diceList.size) {
                     val dice = diceList[i]
                     dice.setValue(diceValues[i])
                     dice.setSelectedStatus(diceSelectedStatus[i])
                     dice.setSelectedScoreTerm(diceSelectedScoreTerm[i])
+                    dice.setHasBeenAddedStatus(diceHasBeenAddedStatus[i])
                     updateDiceImg(dice)
+                    if (dice.getHasBeenAddedStatus()){
+                        dice.diceButton.visibility = View.INVISIBLE
+                    }
                 }
             }
         }
+
     }
 
 

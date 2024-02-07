@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.textfield.TextInputLayout
@@ -14,7 +15,8 @@ class ScoreManager( private val context: Context, private val diceManager:DiceMa
     private var totalScoreList = ArrayList<Int>()
     private var currentScore = 0
 
-    fun addDice(itemSelected: String, textInputLayout: TextInputLayout) {
+    fun addDice(itemSelected: String, textInputLayout: TextInputLayout, rollButton: Button) {
+        rollButton.visibility = View.INVISIBLE
         val diceValuesToAdd = mutableListOf<Int>()
         val diceStack = Stack<Dice>()
 
@@ -43,7 +45,6 @@ class ScoreManager( private val context: Context, private val diceManager:DiceMa
 
     @SuppressLint("SetTextI18n")
     private fun updateScoreView(currentScore: Int, totalScore: Int) {
-        // Update the score view, possibly by communicating back to the MainActivity
         totalScoreText.text = "Total score: $totalScore"
         currentScoreText.text = "Current score: $currentScore"
     }
@@ -73,9 +74,13 @@ class ScoreManager( private val context: Context, private val diceManager:DiceMa
         return bundle
     }
 
+    @SuppressLint("SetTextI18n")
     fun restoreInstanceState(savedInstanceState: Bundle) {
         currentScore = savedInstanceState.getInt("currentScore", 0)
         totalScoreList = savedInstanceState.getIntegerArrayList("totalScoreList") ?: ArrayList()
         // You may restore more data from the bundle if necessary
+        totalScoreText.text = "Total score: ${totalScoreList.sum()}"
+        currentScoreText.text = "Current score: $currentScore"
+
     }
 }

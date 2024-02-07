@@ -27,11 +27,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val textInputLayout: TextInputLayout = findViewById(R.id.textInputLayout)
+        val rollNrText: TextView = findViewById(R.id.tvRollNr)
         val totalScoreText: TextView = findViewById(R.id.tvTotalScore)
         val currentScoreText: TextView = findViewById(R.id.tvCurrentScore)
 
         diceButtons = addDiceButtons()
-        diceManager = DiceManager(this, diceButtons)
+        diceManager = DiceManager(this, diceButtons, rollNrText)
         scoreManager = ScoreManager(this, diceManager, totalScoreText, currentScoreText)
 
         // Roll dice
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         // Add dice
         val addDice: Button = findViewById(R.id.btnAdd)
         addDice.setOnClickListener {
-            scoreManager.addDice(itemSelected, textInputLayout)
+            scoreManager.addDice(itemSelected, textInputLayout, rollButton)
         }
 
         // Next roll round
@@ -76,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         // Restore diceManager and scoreManager data
@@ -87,10 +89,12 @@ class MainActivity : AppCompatActivity() {
         dropDownItems.addAll(savedInstanceState.getStringArrayList("dropDownItems") ?: emptyList())
         itemSelected = savedInstanceState.getString("itemSelected", "")
         createDropDownMenu()
+        val currentDropDownItemsText: TextView = findViewById(R.id.tvCurrentDropDownItems)
+        currentDropDownItemsText.text = "Alternativ: $dropDownItems"
 
         gameRounds = savedInstanceState.getSerializable("gameRounds") as? MutableList<GameRound> ?: mutableListOf()
 
-        if (diceManager.getNumberOfRolls() > 2) {
+        if (diceManager.getNumberOfRolls() > 2 && !diceManager.hasDicesBeenAdded()) {
             val textInputLayout: TextInputLayout = findViewById(R.id.textInputLayout)
             textInputLayout.visibility = View.VISIBLE
         }
@@ -98,8 +102,13 @@ class MainActivity : AppCompatActivity() {
             makeButtonsVisible()
             setDiceListener()
         }
+        if (diceManager.hasDicesBeenAdded()){
+            val rollButton: Button = findViewById(R.id.btnRoll)
+            rollButton.visibility = View.INVISIBLE
+        }
     }
 
+    //TODO: Dont make DropDownMenu invisible before user successfully added dice
     private fun createDropDownMenu(){
         val autoComplete: AutoCompleteTextView = findViewById(R.id.auto_complete)
         val adapter = ArrayAdapter(this, R.layout.list_item, dropDownItems)
@@ -151,6 +160,8 @@ class MainActivity : AppCompatActivity() {
      * Resets and updates the necessary components for the next game round.
      */
     private fun prepareNextRound() {
+        val rollNrText: TextView = findViewById(R.id.tvRollNr)
+        rollNrText.text = "Roll nr: 0"
         diceManager.resetDice()
         diceManager.setNumberOfRolls(0)
         setNewRoundVisibility()
@@ -163,17 +174,19 @@ class MainActivity : AppCompatActivity() {
     private fun setNewRoundVisibility(){
         val currentScoreText: TextView = findViewById(R.id.tvCurrentScore)
         val addDice: Button = findViewById(R.id.btnAdd)
+        val rollButton: Button = findViewById(R.id.btnRoll)
         val btnNextRound: Button = findViewById(R.id.btnNext)
         currentScoreText.text = "Current score: 0"
+        rollButton.visibility = View.VISIBLE
         addDice.visibility = View.INVISIBLE
         btnNextRound.visibility = View.INVISIBLE
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateDropDownMenu() {
         dropDownItems.remove(itemSelected)
-        val dropDownAlternatives = "Alternativ: $dropDownItems"
         val currentDropDownItemsText: TextView = findViewById(R.id.tvCurrentDropDownItems)
-        currentDropDownItemsText.text = dropDownAlternatives
+        currentDropDownItemsText.text = "Alternativ: $dropDownItems"
     }
 
     private fun goToResultView() {
