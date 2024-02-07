@@ -47,7 +47,7 @@ class ScoreManager( private val context: Context, private val diceManager:DiceMa
         } else {
             totalScoreList = restoreTotalScore(diceStack, totalScoreList)
             currentScore -= addResult
-            textInputLayout.visibility = View.GONE
+            //textInputLayout.visibility = View.VISIBLE
             Toast.makeText(context, "Sum != $itemSelected", Toast.LENGTH_SHORT).show()
         }
         diceValuesToAdd.clear()

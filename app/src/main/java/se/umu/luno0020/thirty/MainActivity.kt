@@ -123,7 +123,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //TODO: Do not make DropDownMenu invisible before user successfully added dice
     /**
      * createDropDownMenu: Sets up the drop-down menu for selecting score categories.
      * It configures the AutoCompleteTextView with the appropriate adapter and item click listener.
