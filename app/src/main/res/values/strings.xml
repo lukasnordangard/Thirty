@@ -11,15 +11,16 @@
 
     <string name="totalScoreText">Total score: 0</string>
     <string name="currentScoreText">Current score: 0</string>
-    <string name="btnRollText">Rulla!</string>
-    <string name="btnAddText">Addera</string>
-    <string name="btnNext">Nästa</string>
+    <string name="btnRollText">Roll!</string>
+    <string name="btnAddText">Add</string>
+    <string name="btnNext">Next</string>
 
-    <string name="CurrentDropDownItems">Alternativ: </string>
-    <string name="item_label">Poängsättning</string>
-    <string name="auto_complete_label">Välj poängsättning</string>
+    <string name="CurrentDropDownItems">Alternative: </string>
+    <string name="item_label">Scoring</string>
+    <string name="auto_complete_label">Select scoring category</string>
 
-    <string name="totalScoreTitle">Totalpoäng</string>
-    <string name="roundScoreTitle">Delpoäng</string>
+    <string name="totalScoreTitle">Total score</string>
+    <string name="roundScoreTitle">Rounds</string>
+    <string name="restartBtn">Restart</string>
 
 </resources>

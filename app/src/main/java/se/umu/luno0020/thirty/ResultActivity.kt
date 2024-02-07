@@ -1,6 +1,5 @@
 package se.umu.luno0020.thirty
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -9,43 +8,43 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
-@Suppress("DEPRECATION")
 class ResultActivity : AppCompatActivity() {
 
     private var totalScore = 0
 
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
 
         val gameRounds = intent.getSerializableExtra("gameRounds") as? Array<GameRound>
-        val tv:TextView = findViewById(R.id.tvTotalScore)
+        val tvTotalScore: TextView = findViewById(R.id.tvTotalScore)
+        val listViewRoundScore: ListView = findViewById(R.id.lvRoundScoreList)
 
-        // Check if the list is not null
         if (gameRounds != null) {
-            val arrayAdapter: ArrayAdapter<*>
-            val roundScore = arrayListOf<String>()
+            val roundScoreList = mutableListOf<String>()
 
             for (gameRound in gameRounds) {
-                roundScore.add("Category: ${gameRound.getCategory()},\t Score: ${gameRound.getScore()}")
-                totalScore += gameRound.getScore()
+                val category = gameRound.getCategory()
+                val score = gameRound.getScore()
+                roundScoreList.add("Category: $category,\t Score: $score")
+                totalScore += score
             }
-            tv.text = totalScore.toString()
 
-            // Access the listView from xml file.
-            val mListView = findViewById<ListView>(R.id.lvRoundScoreList)
-            arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, roundScore)
-            mListView.adapter = arrayAdapter
+            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, roundScoreList)
+            listViewRoundScore.adapter = arrayAdapter
+            tvTotalScore.text = totalScore.toString()
         }
 
-        val button: Button = findViewById(R.id.button)
-
-        button.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            startActivity(intent)
-            finish()
+        val restartButton: Button = findViewById(R.id.btnRestart)
+        restartButton.setOnClickListener {
+            restartGame()
         }
+    }
+
+    private fun restartGame() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+        finish()
     }
 }

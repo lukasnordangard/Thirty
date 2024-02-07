@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var diceManager: DiceManager
     private lateinit var scoreManager: ScoreManager
     private var diceButtons = listOf<ImageButton>()
-    private val dropDownItems = mutableListOf("LOW", "4", "5")//, "6", "7", "8", "9", "10", "11", "12")
+    private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
     private var itemSelected = ""
     private var gameRounds = mutableListOf<GameRound>()
 
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         itemSelected = savedInstanceState.getString("itemSelected", "")
         createDropDownMenu()
         val currentDropDownItemsText: TextView = findViewById(R.id.tvCurrentDropDownItems)
-        currentDropDownItemsText.text = "Alternativ: $dropDownItems"
+        currentDropDownItemsText.text = "Alternative: $dropDownItems"
 
         gameRounds = savedInstanceState.getSerializable("gameRounds") as? MutableList<GameRound> ?: mutableListOf()
 
@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //TODO: Dont make DropDownMenu invisible before user successfully added dice
+    //TODO: Do not make DropDownMenu invisible before user successfully added dice
     private fun createDropDownMenu(){
         val autoComplete: AutoCompleteTextView = findViewById(R.id.auto_complete)
         val adapter = ArrayAdapter(this, R.layout.list_item, dropDownItems)
@@ -186,7 +186,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateDropDownMenu() {
         dropDownItems.remove(itemSelected)
         val currentDropDownItemsText: TextView = findViewById(R.id.tvCurrentDropDownItems)
-        currentDropDownItemsText.text = "Alternativ: $dropDownItems"
+        currentDropDownItemsText.text = "Alternative: $dropDownItems"
     }
 
     private fun goToResultView() {
