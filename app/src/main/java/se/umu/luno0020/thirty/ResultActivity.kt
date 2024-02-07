@@ -2,7 +2,8 @@ package se.umu.luno0020.thirty
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
@@ -21,11 +22,19 @@ class ResultActivity : AppCompatActivity() {
 
         // Check if the list is not null
         if (gameRounds != null) {
+            val arrayAdapter: ArrayAdapter<*>
+            val roundScore = arrayListOf<String>()
+
             for (gameRound in gameRounds) {
-                Log.i("Dice","score: ${gameRound.getScore()}, category: ${gameRound.getCategory()}")
+                roundScore.add("Category: ${gameRound.getCategory()},\t Score: ${gameRound.getScore()}")
                 totalScore += gameRound.getScore()
             }
             tv.text = totalScore.toString()
+
+            // Access the listView from xml file.
+            val mListView = findViewById<ListView>(R.id.lvRoundScoreList)
+            arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, roundScore)
+            mListView.adapter = arrayAdapter
         }
     }
 }
