@@ -69,6 +69,12 @@ class DiceManager(
         }
     }
 
+    fun makeDicesInvisible() {
+        for (dice in diceList) {
+            dice.diceButton.visibility = View.INVISIBLE
+        }
+    }
+
     /**
      * Rolls all dice, updates their images, and increments the roll number.
      *
@@ -268,6 +274,9 @@ class DiceManager(
     fun restoreInstanceState(savedInstanceState: Bundle) {
         numberOfRolls = savedInstanceState.getInt("numberOfRolls", 0)
         rollNrText.text = "Roll nr: $numberOfRolls"
+        if (numberOfRolls == 0) {
+            makeDicesInvisible()
+        }
         // Restore dice data
         val diceValues = savedInstanceState.getIntArray("diceValues") ?: intArrayOf()
         val diceSelectedStatus = savedInstanceState.getBooleanArray("diceSelectedStatus") ?: booleanArrayOf()
