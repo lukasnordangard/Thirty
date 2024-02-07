@@ -1,8 +1,10 @@
 package se.umu.luno0020.thirty
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +37,15 @@ class ResultActivity : AppCompatActivity() {
             val mListView = findViewById<ListView>(R.id.lvRoundScoreList)
             arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, roundScore)
             mListView.adapter = arrayAdapter
+        }
+
+        val button: Button = findViewById(R.id.button)
+
+        button.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
         }
     }
 }

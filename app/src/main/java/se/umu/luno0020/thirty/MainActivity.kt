@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var diceManager: DiceManager
     private lateinit var scoreManager: ScoreManager
     private var diceButtons = listOf<ImageButton>()
-    private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+    private val dropDownItems = mutableListOf("LOW", "4", "5")//, "6", "7", "8", "9", "10", "11", "12")
     private var itemSelected = ""
     private var gameRounds = mutableListOf<GameRound>()
 
@@ -192,6 +192,7 @@ class MainActivity : AppCompatActivity() {
     private fun goToResultView() {
         val intent = Intent(this, ResultActivity::class.java)
         intent.putExtra("gameRounds", gameRounds.toTypedArray())
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
     }
 
