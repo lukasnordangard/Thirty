@@ -13,6 +13,13 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.google.android.material.textfield.TextInputLayout
 
+/**
+ * The main activity for the game Thirty. Handles dice rolling, scoring,
+ * and navigation to the result screen.
+ *
+ * @author Lukas Nordangård id20lsd
+ * @version 1.0
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var diceManager: DiceManager
@@ -53,12 +60,12 @@ class MainActivity : AppCompatActivity() {
             scoreManager.addDice(itemSelected, textInputLayout, rollButton)
         }
 
-        // Next roll round
+        // Next
         val btnNextRound: Button = findViewById(R.id.btnNext)
         btnNextRound.setOnClickListener{
             // Save current round
             gameRounds.add(scoreManager.saveCurrentRound(itemSelected))
-            // Check if there are score categories left in dropdown menu
+
             if (dropDownItems.size > 1) {
                 prepareNextRound()
             } else {
@@ -68,6 +75,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * onSaveInstanceState: Saves the current state data into the given Bundle.
+     * @param outState The Bundle into which to save the data.
+     */
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("itemSelected", itemSelected)
         outState.putStringArrayList("dropDownItems", ArrayList(dropDownItems))
@@ -77,6 +88,10 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
+    /**
+     * onRestoreInstanceState: Restores the saved instance state data from the given Bundle.
+     * @param savedInstanceState The Bundle containing the saved instance state data.
+     */
     @SuppressLint("SetTextI18n")
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
@@ -109,6 +124,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     //TODO: Do not make DropDownMenu invisible before user successfully added dice
+    /**
+     * createDropDownMenu: Sets up the drop-down menu for selecting score categories.
+     * It configures the AutoCompleteTextView with the appropriate adapter and item click listener.
+     */
     private fun createDropDownMenu(){
         val autoComplete: AutoCompleteTextView = findViewById(R.id.auto_complete)
         val adapter = ArrayAdapter(this, R.layout.list_item, dropDownItems)
@@ -126,6 +145,10 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * addDiceButtons: Retrieves a list of ImageButton objects corresponding to the dice buttons in the layout.
+     * @return List<ImageButton>: List of ImageButton objects.
+     */
     private fun addDiceButtons(): List<ImageButton> {
         return listOf(
             findViewById(R.id.ibDice1), findViewById(R.id.ibDice2), findViewById(R.id.ibDice3),
@@ -133,6 +156,9 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * setDiceListener: Sets up the click listeners for the dice buttons based on the current game state.
+     */
     private fun setDiceListener(){
         for (diceButton in diceButtons) {
             val diceIndex = diceButtons.indexOf(diceButton)
@@ -148,6 +174,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * makeButtonsVisible: Makes the "Add" and "Next" buttons visible and unselects all dice.
+     */
     private fun makeButtonsVisible(){
         val addDice: Button = findViewById(R.id.btnAdd)
         val btnNext: Button = findViewById(R.id.btnNext)
@@ -157,8 +186,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Resets and updates the necessary components for the next game round.
+     * prepareNextRound: Resets and updates the necessary components for the next game round.
      */
+    @SuppressLint("SetTextI18n")
     private fun prepareNextRound() {
         val rollNrText: TextView = findViewById(R.id.tvRollNr)
         rollNrText.text = "Roll nr: 0"
@@ -169,7 +199,9 @@ class MainActivity : AppCompatActivity() {
         setDiceListener()
     }
 
-
+    /**
+     * setNewRoundVisibility: Sets the visibility of UI components for a new game round.
+     */
     @SuppressLint("SetTextI18n")
     private fun setNewRoundVisibility(){
         val currentScoreText: TextView = findViewById(R.id.tvCurrentScore)
@@ -182,6 +214,9 @@ class MainActivity : AppCompatActivity() {
         btnNextRound.visibility = View.INVISIBLE
     }
 
+    /**
+     * updateDropDownMenu: Updates the drop-down menu by removing the currently selected item.
+     */
     @SuppressLint("SetTextI18n")
     private fun updateDropDownMenu() {
         dropDownItems.remove(itemSelected)
@@ -189,6 +224,9 @@ class MainActivity : AppCompatActivity() {
         currentDropDownItemsText.text = "Alternative: $dropDownItems"
     }
 
+    /**
+     * goToResultView: Navigates to the ResultActivity with the game rounds data.
+     */
     private fun goToResultView() {
         val intent = Intent(this, ResultActivity::class.java)
         intent.putExtra("gameRounds", gameRounds.toTypedArray())

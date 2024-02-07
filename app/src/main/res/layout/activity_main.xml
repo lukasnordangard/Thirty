@@ -18,6 +18,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tvRollNr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rollNr"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/cvDiceContainer"
+        app:layout_constraintStart_toStartOf="@+id/cvDiceContainer" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cvDiceContainer"
         android:layout_width="wrap_content"
@@ -197,14 +206,5 @@
         android:text="@string/CurrentDropDownItems"
         app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/tvRollNr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/rollNr"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/cvDiceContainer"
-        app:layout_constraintStart_toStartOf="@+id/cvDiceContainer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

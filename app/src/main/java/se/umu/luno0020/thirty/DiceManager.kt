@@ -11,8 +11,19 @@ import com.google.android.material.textfield.TextInputLayout
 import java.util.Locale
 import java.util.Stack
 
-class DiceManager(private val context: Context, private val diceButtons: List<ImageButton>,
-                  private val rollNrText: TextView) {
+/**
+ * Manages the dice and their operations in the game.
+ * Handles rolling, updating images, toggling selection status,
+ * finding dice for addition, resetting, and saving/restoring instance state.
+ *
+ * @property context The context in which the DiceManager operates.
+ * @property diceButtons The list of ImageButtons representing the dice.
+ * @property rollNrText The TextView displaying the current roll number.
+ */
+class DiceManager(
+    private val context: Context,
+    private val diceButtons: List<ImageButton>,
+    private val rollNrText: TextView) {
 
     private var numberOfRolls = 0
     private val diceList = mutableListOf<Dice>()
@@ -21,29 +32,50 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
         initializeDice()
     }
 
-    fun getNumberOfRolls(): Int{
+    /**
+     * Retrieves the current roll number.
+     *
+     * @return The current roll number.
+     */
+    fun getNumberOfRolls(): Int {
         return numberOfRolls
     }
 
-    fun setNumberOfRolls(rollNr: Int){
+    /**
+     * Sets the current roll number.
+     *
+     * @param rollNr The roll number to set.
+     */
+    fun setNumberOfRolls(rollNr: Int) {
         numberOfRolls = rollNr
     }
 
-    fun getDiceList(): List<Dice>{
+    /**
+     * Retrieves the list of dice.
+     *
+     * @return The list of dice.
+     */
+    fun getDiceList(): List<Dice> {
         return diceList
     }
 
+    /**
+     * Initializes the dice by creating Dice objects and adding them to the dice list.
+     */
     private fun initializeDice() {
         for (diceButton in diceButtons) {
             val dice = Dice(diceButton)
-            //rollDice(dice)
             diceList.add(dice)
-            //dice.diceButton.visibility = View.INVISIBLE
         }
     }
 
+    /**
+     * Rolls all dice, updates their images, and increments the roll number.
+     *
+     * @param textInputLayout The TextInputLayout for user input.
+     */
     @SuppressLint("SetTextI18n")
-    fun rollAllDice(textInputLayout: TextInputLayout){
+    fun rollAllDice(textInputLayout: TextInputLayout) {
         if (numberOfRolls < 3) {
             updateDice()
             numberOfRolls++
@@ -57,6 +89,9 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
         }
     }
 
+    /**
+     * Updates all dice images based on their current values and status.
+     */
     private fun updateDice() {
         for (dice in diceList) {
             rollDice(dice)
@@ -64,6 +99,11 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
         }
     }
 
+    /**
+     * Rolls the specified dice and updates its image.
+     *
+     * @param dice The dice to roll.
+     */
     private fun rollDice(dice: Dice) {
         if (!dice.getSelectedStatus()) {
             dice.setValue(dice.roll())
@@ -71,6 +111,11 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
         }
     }
 
+    /**
+     * Updates the image of the specified dice based on its value and status.
+     *
+     * @param dice The dice to update the image for.
+     */
     private fun updateDiceImg(dice: Dice) {
         val diceColor = when {
             dice.getSelectedScoreTerm() -> "red"
@@ -89,6 +134,12 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
         dice.diceButton.setImageResource(imageResource)
     }
 
+    /**
+     * Retrieves the drawable resource ID based on the specified name.
+     *
+     * @param name The name of the drawable resource.
+     * @return The ID of the drawable resource.
+     */
     private fun getDrawableResource(name: String): Int {
         val resourceId = try {
             val fieldName = name.lowercase(Locale.getDefault()).replace(" ", "")
@@ -99,25 +150,49 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
         return resourceId
     }
 
+    /**
+     * Toggles the selection status of the specified dice and updates its image accordingly.
+     *
+     * @param dice The dice to toggle selection for.
+     */
     fun toggleDiceSelected(dice: Dice) {
         dice.setSelectedStatus(!dice.getSelectedStatus())
         updateDiceImg(dice)
     }
 
+    /**
+     * Toggles the score term selection status of the specified dice and updates its image accordingly.
+     *
+     * @param dice The dice to toggle score term selection for.
+     */
     fun toggleDiceToAdd(dice: Dice) {
         dice.setSelectedScoreTerm(!dice.getSelectedScoreTerm())
         updateDiceImg(dice)
     }
 
-    fun unselectAllDice(){
-        for (dice in diceList){
+    /**
+     * Unselects all dice, resetting their selection status and updating their images.
+     */
+    fun unselectAllDice() {
+        for (dice in diceList) {
             dice.setSelectedStatus(false)
             updateDiceImg(dice)
         }
     }
 
-    fun findAllDiceForAddition(totalScoreList: ArrayList<Int>, diceValuesToAdd: MutableList<Int>, diceStack: Stack<Dice>
-    ){
+    /**
+     * Finds all dice selected for addition, updates their statuses, adds their values to the total score list,
+     * and hides their buttons. Also marks them as added.
+     *
+     * @param totalScoreList The list to store the total score.
+     * @param diceValuesToAdd The list to store dice values to add.
+     * @param diceStack The stack to push dice objects to.
+     */
+    fun findAllDiceForAddition(
+        totalScoreList: ArrayList<Int>,
+        diceValuesToAdd: MutableList<Int>,
+        diceStack: Stack<Dice>
+    ) {
         for (dice in diceList) {
             if (dice.getSelectedScoreTerm()) {
                 totalScoreList.add(dice.getValue())
@@ -130,8 +205,11 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
         }
     }
 
-    fun resetDice(){
-        for (dice in diceList){
+    /**
+     * Resets all dice, hiding their buttons and resetting their statuses.
+     */
+    fun resetDice() {
+        for (dice in diceList) {
             dice.diceButton.visibility = View.INVISIBLE
             dice.setSelectedStatus(false)
             dice.setSelectedScoreTerm(false)
@@ -139,8 +217,13 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
         }
     }
 
+    /**
+     * Checks if any dice have been marked as added.
+     *
+     * @return True if any dice have been added, false otherwise.
+     */
     fun hasDicesBeenAdded(): Boolean {
-        for (dice in diceList){
+        for (dice in diceList) {
             if (dice.getHasBeenAddedStatus()) {
                 return true
             }
@@ -148,6 +231,11 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
         return false
     }
 
+    /**
+     * Saves the current state of the DiceManager, including the number of rolls and dice data.
+     *
+     * @return A Bundle containing the saved instance state data.
+     */
     fun saveInstanceState(): Bundle {
         val bundle = Bundle()
         bundle.putInt("numberOfRolls", numberOfRolls)
@@ -171,6 +259,11 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
         return bundle
     }
 
+    /**
+     * Restores the previous state of the DiceManager, including the number of rolls and dice data.
+     *
+     * @param savedInstanceState A Bundle containing the saved instance state data.
+     */
     @SuppressLint("SetTextI18n")
     fun restoreInstanceState(savedInstanceState: Bundle) {
         numberOfRolls = savedInstanceState.getInt("numberOfRolls", 0)
@@ -191,15 +284,12 @@ class DiceManager(private val context: Context, private val diceButtons: List<Im
                     dice.setSelectedScoreTerm(diceSelectedScoreTerm[i])
                     dice.setHasBeenAddedStatus(diceHasBeenAddedStatus[i])
                     updateDiceImg(dice)
-                    if (dice.getHasBeenAddedStatus()){
+                    if (dice.getHasBeenAddedStatus()) {
                         dice.diceButton.visibility = View.INVISIBLE
                     }
                 }
             }
         }
-
     }
-
-
 
 }

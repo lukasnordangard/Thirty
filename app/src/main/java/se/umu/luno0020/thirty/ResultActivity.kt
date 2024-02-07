@@ -8,6 +8,9 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * Activity displaying the result of the game rounds and providing an option to restart the game.
+ */
 class ResultActivity : AppCompatActivity() {
 
     private var totalScore = 0
@@ -41,6 +44,9 @@ class ResultActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Restarts the game by navigating to the MainActivity and clearing the activity stack.
+     */
     private fun restartGame() {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
