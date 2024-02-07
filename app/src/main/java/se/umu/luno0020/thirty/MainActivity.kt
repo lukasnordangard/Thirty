@@ -15,13 +15,11 @@ import com.google.android.material.textfield.TextInputLayout
 
 class MainActivity : AppCompatActivity() {
 
-    private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
-    private var itemSelected = ""
-
     private lateinit var diceManager: DiceManager
     private lateinit var scoreManager: ScoreManager
     private var diceButtons = listOf<ImageButton>()
-
+    private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+    private var itemSelected = ""
     private var gameRounds = mutableListOf<GameRound>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,43 +34,30 @@ class MainActivity : AppCompatActivity() {
         diceManager = DiceManager(this, diceButtons)
         scoreManager = ScoreManager(this, diceManager, totalScoreText, currentScoreText)
 
-        // Roll dice.
+        // Roll dice
         val rollButton: Button = findViewById(R.id.btnRoll)
         rollButton.setOnClickListener {
             diceManager.rollAllDice(textInputLayout)
         }
 
-        // Listening for dices (to save during next roll).
+        // Listening for dices (to save during next roll)
         setDiceListener()
 
-        // Select scoring category.
-        val autoComplete: AutoCompleteTextView = findViewById(R.id.auto_complete)
-        val adapter = ArrayAdapter(this, R.layout.list_item, dropDownItems)
-        autoComplete.setAdapter(adapter)
-        autoComplete.onItemClickListener =
-            AdapterView.OnItemClickListener { _, _, i, _ ->
-                itemSelected = dropDownItems[i]
+        // Select scoring category
+        createDropDownMenu()
 
-                // Find score category that matches chosen one in drop down menu.
-                dropDownItems.find { it == itemSelected }?.run {
-                    setDiceListener()
-                    makeButtonsVisible()
-                    scoreManager.resetCurrentScore()
-                }
-            }
-
-        // Add dice.
+        // Add dice
         val addDice: Button = findViewById(R.id.btnAdd)
         addDice.setOnClickListener {
             scoreManager.addDice(itemSelected, textInputLayout)
         }
 
-        // Next roll round.
+        // Next roll round
         val btnNextRound: Button = findViewById(R.id.btnNext)
         btnNextRound.setOnClickListener{
-            saveCurrentRound()
-
-            // Check if there are score categories left in dropdown menu.
+            // Save current round
+            gameRounds.add(scoreManager.saveCurrentRound(itemSelected))
+            // Check if there are score categories left in dropdown menu
             if (dropDownItems.size > 1) {
                 prepareNextRound()
             } else {
@@ -93,19 +78,29 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        itemSelected = savedInstanceState.getString("itemSelected", "")
-        dropDownItems.clear()
-        dropDownItems.addAll(savedInstanceState.getStringArrayList("dropDownItems") ?: emptyList())
-        gameRounds = savedInstanceState.getSerializable("gameRounds") as? MutableList<GameRound> ?: mutableListOf()
-
         // Restore diceManager and scoreManager data
         savedInstanceState.getBundle("diceManager")?.let { diceManager.restoreInstanceState(it) }
         savedInstanceState.getBundle("scoreManager")?.let { scoreManager.restoreInstanceState(it) }
+
+        // Restore DropDownMenu
+        dropDownItems.clear()
+        dropDownItems.addAll(savedInstanceState.getStringArrayList("dropDownItems") ?: emptyList())
+        itemSelected = savedInstanceState.getString("itemSelected", "")
+        createDropDownMenu()
+
+        gameRounds = savedInstanceState.getSerializable("gameRounds") as? MutableList<GameRound> ?: mutableListOf()
+
         if (diceManager.getNumberOfRolls() > 2) {
             val textInputLayout: TextInputLayout = findViewById(R.id.textInputLayout)
             textInputLayout.visibility = View.VISIBLE
         }
+        if (itemSelected != "") {
+            makeButtonsVisible()
+            setDiceListener()
+        }
+    }
 
+    private fun createDropDownMenu(){
         val autoComplete: AutoCompleteTextView = findViewById(R.id.auto_complete)
         val adapter = ArrayAdapter(this, R.layout.list_item, dropDownItems)
         autoComplete.setAdapter(adapter)
@@ -113,7 +108,7 @@ class MainActivity : AppCompatActivity() {
             AdapterView.OnItemClickListener { _, _, i, _ ->
                 itemSelected = dropDownItems[i]
 
-                // Find score category that matches chosen one in drop down menu.
+                // Find score category that matches chosen one in drop down menu
                 dropDownItems.find { it == itemSelected }?.run {
                     setDiceListener()
                     makeButtonsVisible()
@@ -152,23 +147,17 @@ class MainActivity : AppCompatActivity() {
         diceManager.unselectAllDice()
     }
 
-    private fun saveCurrentRound() {
-        gameRounds.add(scoreManager.saveCurrentRound(itemSelected))
-    }
-
     /**
      * Resets and updates the necessary components for the next game round.
      */
     private fun prepareNextRound() {
-        resetDiceAndVisibility()
+        diceManager.resetDice()
+        diceManager.setNumberOfRolls(0)
+        setNewRoundVisibility()
         updateDropDownMenu()
-        resetRollNumberAndListeners()
+        setDiceListener()
     }
 
-    private fun resetDiceAndVisibility() {
-        diceManager.resetDice()
-        setNewRoundVisibility()
-    }
 
     @SuppressLint("SetTextI18n")
     private fun setNewRoundVisibility(){
@@ -185,11 +174,6 @@ class MainActivity : AppCompatActivity() {
         val dropDownAlternatives = "Alternativ: $dropDownItems"
         val currentDropDownItemsText: TextView = findViewById(R.id.tvCurrentDropDownItems)
         currentDropDownItemsText.text = dropDownAlternatives
-    }
-
-    private fun resetRollNumberAndListeners() {
-        diceManager.setNumberOfRolls(0)
-        setDiceListener()
     }
 
     private fun goToResultView() {
