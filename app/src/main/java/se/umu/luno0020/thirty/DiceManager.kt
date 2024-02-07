@@ -1,6 +1,7 @@
 package se.umu.luno0020.thirty
 
 import android.content.Context
+import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
@@ -8,7 +9,7 @@ import com.google.android.material.textfield.TextInputLayout
 import java.util.Locale
 import java.util.Stack
 
-class DiceManager(private val context: Context, private val diceButtons:List<ImageButton>) {
+class DiceManager(private val context: Context, private val diceButtons: List<ImageButton>) {
 
     private var numberOfRolls = 0
     private val diceList = mutableListOf<Dice>()
@@ -32,9 +33,9 @@ class DiceManager(private val context: Context, private val diceButtons:List<Ima
     private fun initializeDice() {
         for (diceButton in diceButtons) {
             val dice = Dice(diceButton)
-            rollDice(dice)
+            //rollDice(dice)
             diceList.add(dice)
-            dice.diceButton.visibility = View.INVISIBLE
+            //dice.diceButton.visibility = View.INVISIBLE
         }
     }
 
@@ -47,6 +48,7 @@ class DiceManager(private val context: Context, private val diceButtons:List<Ima
                 textInputLayout.visibility = View.VISIBLE
             }
         } else {
+            textInputLayout.visibility = View.VISIBLE
             Toast.makeText(context, "Max number of rolls!", Toast.LENGTH_SHORT).show()
         }
     }
@@ -130,4 +132,47 @@ class DiceManager(private val context: Context, private val diceButtons:List<Ima
             dice.setSelectedScoreTerm(false)
         }
     }
+
+    fun saveInstanceState(): Bundle {
+        val bundle = Bundle()
+        bundle.putInt("numberOfRolls", numberOfRolls)
+
+        // Save dice data
+        val diceValues = mutableListOf<Int>()
+        val diceSelectedStatus = mutableListOf<Boolean>()
+        val diceSelectedScoreTerm = mutableListOf<Boolean>()
+        for (dice in diceList) {
+            diceValues.add(dice.getValue())
+            diceSelectedStatus.add(dice.getSelectedStatus())
+            diceSelectedScoreTerm.add(dice.getSelectedScoreTerm())
+        }
+        bundle.putIntArray("diceValues", diceValues.toIntArray())
+        bundle.putBooleanArray("diceSelectedStatus", diceSelectedStatus.toBooleanArray())
+        bundle.putBooleanArray("diceSelectedScoreTerm", diceSelectedScoreTerm.toBooleanArray())
+
+        return bundle
+    }
+
+    fun restoreInstanceState(savedInstanceState: Bundle) {
+        numberOfRolls = savedInstanceState.getInt("numberOfRolls", 0)
+
+        // Restore dice data
+        val diceValues = savedInstanceState.getIntArray("diceValues") ?: intArrayOf()
+        val diceSelectedStatus = savedInstanceState.getBooleanArray("diceSelectedStatus") ?: booleanArrayOf()
+        val diceSelectedScoreTerm = savedInstanceState.getBooleanArray("diceSelectedScoreTerm") ?: booleanArrayOf()
+        if (diceValues.size == diceSelectedStatus.size && diceValues.size == diceSelectedScoreTerm.size) {
+            for (i in diceValues.indices) {
+                if (i < diceList.size) {
+                    val dice = diceList[i]
+                    dice.setValue(diceValues[i])
+                    dice.setSelectedStatus(diceSelectedStatus[i])
+                    dice.setSelectedScoreTerm(diceSelectedScoreTerm[i])
+                    updateDiceImg(dice)
+                }
+            }
+        }
+    }
+
+
+
 }

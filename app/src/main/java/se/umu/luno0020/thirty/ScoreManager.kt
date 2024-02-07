@@ -2,6 +2,7 @@ package se.umu.luno0020.thirty
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -62,5 +63,19 @@ class ScoreManager( private val context: Context, private val diceManager:DiceMa
 
     fun resetCurrentScore(){
         currentScore = 0
+    }
+
+    fun saveInstanceState(): Bundle {
+        val bundle = Bundle()
+        bundle.putInt("currentScore", currentScore)
+        bundle.putIntegerArrayList("totalScoreList", totalScoreList)
+        // You may add more data to the bundle if necessary
+        return bundle
+    }
+
+    fun restoreInstanceState(savedInstanceState: Bundle) {
+        currentScore = savedInstanceState.getInt("currentScore", 0)
+        totalScoreList = savedInstanceState.getIntegerArrayList("totalScoreList") ?: ArrayList()
+        // You may restore more data from the bundle if necessary
     }
 }

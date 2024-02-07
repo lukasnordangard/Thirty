@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
     private var itemSelected = ""
 
-    private lateinit var diceManager:DiceManager
+    private lateinit var diceManager: DiceManager
     private lateinit var scoreManager: ScoreManager
     private var diceButtons = listOf<ImageButton>()
 
@@ -83,13 +83,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
         outState.putString("itemSelected", itemSelected)
+        outState.putStringArrayList("dropDownItems", ArrayList(dropDownItems))
+        outState.putSerializable("gameRounds", ArrayList(gameRounds))
+        outState.putBundle("diceManager", diceManager.saveInstanceState())
+        outState.putBundle("scoreManager", scoreManager.saveInstanceState())
+        super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        itemSelected = savedInstanceState.getString("itemSelected") ?: ""
+        itemSelected = savedInstanceState.getString("itemSelected", "")
+        dropDownItems.clear()
+        dropDownItems.addAll(savedInstanceState.getStringArrayList("dropDownItems") ?: emptyList())
+        gameRounds = savedInstanceState.getSerializable("gameRounds") as? MutableList<GameRound> ?: mutableListOf()
+
+        // Restore diceManager and scoreManager data
+        savedInstanceState.getBundle("diceManager")?.let { diceManager.restoreInstanceState(it) }
+        savedInstanceState.getBundle("scoreManager")?.let { scoreManager.restoreInstanceState(it) }
+        if (diceManager.getNumberOfRolls() > 2) {
+            val textInputLayout: TextInputLayout = findViewById(R.id.textInputLayout)
+            textInputLayout.visibility = View.VISIBLE
+        }
+
+        val autoComplete: AutoCompleteTextView = findViewById(R.id.auto_complete)
+        val adapter = ArrayAdapter(this, R.layout.list_item, dropDownItems)
+        autoComplete.setAdapter(adapter)
+        autoComplete.onItemClickListener =
+            AdapterView.OnItemClickListener { _, _, i, _ ->
+                itemSelected = dropDownItems[i]
+
+                // Find score category that matches chosen one in drop down menu.
+                dropDownItems.find { it == itemSelected }?.run {
+                    setDiceListener()
+                    makeButtonsVisible()
+                    scoreManager.resetCurrentScore()
+                }
+            }
     }
 
     private fun addDiceButtons(): List<ImageButton> {
