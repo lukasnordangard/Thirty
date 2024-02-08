@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Thirty</string>
 
-    <string name="rollNr">Roll nr: 0</string>
+    <string name="rollNr">Roll nr: 1</string>
     <string name="dice1Description">dice1</string>
     <string name="dice2Description">dice2</string>
     <string name="dice3Description">dice3</string>

@@ -25,7 +25,7 @@ class DiceManager(
     private val diceButtons: List<ImageButton>,
     private val rollNrText: TextView) {
 
-    private var numberOfRolls = 0
+    private var numberOfRolls = 1
     private val diceList = mutableListOf<Dice>()
 
     init {
@@ -65,6 +65,7 @@ class DiceManager(
     private fun initializeDice() {
         for (diceButton in diceButtons) {
             val dice = Dice(diceButton)
+            rollDice(dice)
             diceList.add(dice)
         }
     }
