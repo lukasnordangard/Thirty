@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
     private var itemSelected = ""
     private var gameRounds = mutableListOf<GameRound>()
+    private var buttonsVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,11 +81,12 @@ class MainActivity : AppCompatActivity() {
      * @param outState The Bundle into which to save the data.
      */
     override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBundle("diceManager", diceManager.saveInstanceState())
+        outState.putBundle("scoreManager", scoreManager.saveInstanceState())
         outState.putString("itemSelected", itemSelected)
         outState.putStringArrayList("dropDownItems", ArrayList(dropDownItems))
         outState.putSerializable("gameRounds", ArrayList(gameRounds))
-        outState.putBundle("diceManager", diceManager.saveInstanceState())
-        outState.putBundle("scoreManager", scoreManager.saveInstanceState())
+        outState.putBoolean("buttonsVisible", buttonsVisible)
         super.onSaveInstanceState(outState)
     }
 
@@ -108,12 +110,13 @@ class MainActivity : AppCompatActivity() {
         currentDropDownItemsText.text = "Alternative: $dropDownItems"
 
         gameRounds = savedInstanceState.getSerializable("gameRounds") as? MutableList<GameRound> ?: mutableListOf()
+        buttonsVisible = savedInstanceState.getBoolean("buttonsVisible")
 
         if (diceManager.getNumberOfRolls() > 2 && !diceManager.hasDicesBeenAdded()) {
             val textInputLayout: TextInputLayout = findViewById(R.id.textInputLayout)
             textInputLayout.visibility = View.VISIBLE
         }
-        if (itemSelected != "") {
+        if (itemSelected != "" && buttonsVisible) {
             makeButtonsVisible()
             setDiceListener()
         }
@@ -182,6 +185,7 @@ class MainActivity : AppCompatActivity() {
         addDice.visibility = View.VISIBLE
         btnNext.visibility = View.VISIBLE
         diceManager.unselectAllDice()
+        buttonsVisible = true
     }
 
     /**
@@ -211,6 +215,7 @@ class MainActivity : AppCompatActivity() {
         rollButton.visibility = View.VISIBLE
         addDice.visibility = View.INVISIBLE
         btnNextRound.visibility = View.INVISIBLE
+        buttonsVisible = false
     }
 
     /**
