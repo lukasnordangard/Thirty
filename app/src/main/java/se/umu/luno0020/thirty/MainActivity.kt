@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var diceManager: DiceManager
     private lateinit var scoreManager: ScoreManager
     private var diceButtons = listOf<ImageButton>()
-    private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+    private val dropDownItems = mutableListOf("LOW", "4", "5")//, "6", "7", "8", "9", "10", "11", "12")
     private var itemSelected = ""
     private var gameRounds = mutableListOf<GameRound>()
     private var buttonsVisible = false
@@ -69,6 +69,10 @@ class MainActivity : AppCompatActivity() {
 
             if (dropDownItems.size > 1) {
                 prepareNextRound()
+                if (dropDownItems.size == 1) {
+                    val nextBtn: Button = findViewById(R.id.btnNext)
+                    nextBtn.text = "Result"
+                }
             } else {
                 goToResultView()
             }
