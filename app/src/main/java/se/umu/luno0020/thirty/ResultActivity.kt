@@ -14,29 +14,28 @@ import androidx.appcompat.app.AppCompatActivity
 class ResultActivity : AppCompatActivity() {
 
     private var totalScore = 0
+    private lateinit var gameRounds: Array<GameRound>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
 
-        val gameRounds = intent.getSerializableExtra("gameRounds") as? Array<GameRound>
+        gameRounds = intent.getSerializableExtra("gameRounds") as Array<GameRound>
         val tvTotalScore: TextView = findViewById(R.id.tvTotalScore)
         val listViewRoundScore: ListView = findViewById(R.id.lvRoundScoreList)
 
-        if (gameRounds != null) {
-            val roundScoreList = mutableListOf<String>()
+        val roundScoreList = mutableListOf<String>()
 
-            for (gameRound in gameRounds) {
-                val category = gameRound.getCategory()
-                val score = gameRound.getScore()
-                roundScoreList.add("Category: $category,\t Score: $score")
-                totalScore += score
-            }
-
-            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, roundScoreList)
-            listViewRoundScore.adapter = arrayAdapter
-            tvTotalScore.text = totalScore.toString()
+        for (gameRound in gameRounds) {
+            val category = gameRound.getCategory()
+            val score = gameRound.getScore()
+            roundScoreList.add("Category: $category,\t Score: $score")
+            totalScore += score
         }
+
+        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, roundScoreList)
+        listViewRoundScore.adapter = arrayAdapter
+        tvTotalScore.text = totalScore.toString()
 
         val restartButton: Button = findViewById(R.id.btnRestart)
         restartButton.setOnClickListener {
