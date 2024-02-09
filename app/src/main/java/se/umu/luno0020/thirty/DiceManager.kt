@@ -70,6 +70,9 @@ class DiceManager(
         }
     }
 
+    /**
+     * Makes all dice in the diceList invisible.
+     */
     fun makeDicesInvisible() {
         for (dice in diceList) {
             dice.diceButton.visibility = View.INVISIBLE
