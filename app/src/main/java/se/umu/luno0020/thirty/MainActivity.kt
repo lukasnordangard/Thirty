@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private var gameRounds = mutableListOf<GameRound>()
     private var buttonsVisible = false
 
+    @SuppressLint("SetTextI18n", "CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
