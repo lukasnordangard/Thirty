@@ -18,7 +18,7 @@ import com.google.android.material.textfield.TextInputLayout
  * and navigation to the result screen.
  *
  * @author Lukas Nordangård id20lsd
- * @version 1.0
+ * @version 2.0
  */
 class MainActivity : AppCompatActivity() {
 
