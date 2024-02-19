@@ -14,13 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 class ResultActivity : AppCompatActivity() {
 
     private var totalScore = 0
-    private lateinit var gameRounds: Array<GameRound>
+    private lateinit var gameRounds: ArrayList<GameRound>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
 
-        gameRounds = intent.getSerializableExtra("gameRounds") as Array<GameRound>
+        // Retrieve gameRounds array using Parcelable
+        gameRounds = intent.getParcelableArrayListExtra("gameRounds") ?: arrayListOf()
         val tvTotalScore: TextView = findViewById(R.id.tvTotalScore)
         val listViewRoundScore: ListView = findViewById(R.id.lvRoundScoreList)
 

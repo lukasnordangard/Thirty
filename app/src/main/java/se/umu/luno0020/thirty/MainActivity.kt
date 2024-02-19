@@ -20,14 +20,15 @@ import com.google.android.material.textfield.TextInputLayout
  * @author Lukas Nordangård id20lsd
  * @version 2.0
  */
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var diceManager: DiceManager
     private lateinit var scoreManager: ScoreManager
     private var diceButtons = listOf<ImageButton>()
-    private val dropDownItems = mutableListOf("LOW", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+    private val dropDownItems = mutableListOf("LOW", "4", "5")//, "6", "7", "8", "9", "10", "11", "12")
     private var itemSelected = ""
-    private var gameRounds = mutableListOf<GameRound>()
+    private var gameRounds = arrayListOf<GameRound>()
     private var buttonsVisible = false
 
     @SuppressLint("SetTextI18n", "CutPasteId")
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity() {
         outState.putBundle("scoreManager", scoreManager.saveInstanceState())
         outState.putString("itemSelected", itemSelected)
         outState.putStringArrayList("dropDownItems", ArrayList(dropDownItems))
-        outState.putSerializable("gameRounds", ArrayList(gameRounds))
+        outState.putParcelableArrayList("gameRounds", gameRounds) // Use putParcelableArrayList for Parcelable
         outState.putBoolean("buttonsVisible", buttonsVisible)
         super.onSaveInstanceState(outState)
     }
@@ -114,7 +115,9 @@ class MainActivity : AppCompatActivity() {
         val currentDropDownItemsText: TextView = findViewById(R.id.tvCurrentDropDownItems)
         currentDropDownItemsText.text = "Alternative: $dropDownItems"
 
-        gameRounds = savedInstanceState.getSerializable("gameRounds") as? MutableList<GameRound> ?: mutableListOf()
+        // Use getParcelableArrayList for Parcelable
+        gameRounds = savedInstanceState.getParcelableArrayList("gameRounds") ?: arrayListOf()
+
         buttonsVisible = savedInstanceState.getBoolean("buttonsVisible")
 
         if (diceManager.getNumberOfRolls() > 2 && !diceManager.hasDicesBeenAdded()) {
@@ -238,8 +241,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun goToResultView() {
         val intent = Intent(this, ResultActivity::class.java)
-        intent.putExtra("gameRounds", gameRounds.toTypedArray())
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtra("gameRounds", gameRounds)
         startActivity(intent)
     }
 
