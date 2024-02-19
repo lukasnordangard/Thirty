@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 /**
  * Activity displaying the result of the game rounds and providing an option to restart the game.
  */
+@Suppress("DEPRECATION")
 class ResultActivity : AppCompatActivity() {
 
     private var totalScore = 0
